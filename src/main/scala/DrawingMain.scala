@@ -36,7 +36,6 @@ object DrawingMain extends JFXApp {
     String.format("#%08X", r + g + b + a)
   }
 
-
   // Create file menu
   val newItem = new MenuItem("New")
   val openItem = new MenuItem("Open")
@@ -83,7 +82,6 @@ object DrawingMain extends JFXApp {
 
   // Set color button colors, sizes and toggle group
   for (i <- 0 to 15) {
-    val button = colorButtons(i)
     val hex = toHexString(colorArr(i))
     colorButtons(i).setStyle(s"-fx-background-color: $hex")
     colorButtons(i).setPrefSize(40, 40)
@@ -96,6 +94,25 @@ object DrawingMain extends JFXApp {
     toolbox.add(colorButtons(m), i, j)
     m += 1
   }
+
+  // Create buttons for shapes
+  var shapes = new ToggleGroup
+  val line = new ToggleButton("Line")
+  val rectangle = new ToggleButton("Rectangle")
+  val ellipse = new ToggleButton("Ellipse")
+  val circle = new ToggleButton("Circle")
+
+  // Set shape buttons to the same toggle group
+  line.setToggleGroup(shapes)
+  rectangle.setToggleGroup(shapes)
+  ellipse.setToggleGroup(shapes)
+  circle.setToggleGroup(shapes)
+
+  // Add shape buttons to the toolbox
+  toolbox.add(line, 0, 4, 2, 1)
+  toolbox.add(rectangle, 2, 4, 2, 1)
+  toolbox.add(ellipse, 0, 5, 2, 1)
+  toolbox.add(circle, 2, 5, 2, 1)
 
   // Create first canvas
   val tabPane = new TabPane
