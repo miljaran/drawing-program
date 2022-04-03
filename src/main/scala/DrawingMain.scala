@@ -3,13 +3,14 @@ import scalafx.application.JFXApp.PrimaryStage
 import scalafx.event.ActionEvent
 import scalafx.scene.Scene
 import scalafx.scene.canvas.Canvas
-import scalafx.scene.control.{Menu, MenuBar, MenuItem, Tab, TabPane, ToggleButton, ToggleGroup}
+import scalafx.scene.control.{DialogEvent, Menu, MenuBar, MenuItem, Tab, TabPane, TextInputDialog, ToggleButton, ToggleGroup}
 import scalafx.scene.layout.{BorderPane, ColumnConstraints, GridPane, RowConstraints}
 import scalafx.Includes._
 import scalafx.geometry.Insets
 import scalafx.scene.input.MouseEvent
 import scalafx.scene.paint.Color
 import scalafx.scene.paint.Color.{Black, Blue, Cyan, DarkBlue, DarkViolet, FireBrick, Green, GreenYellow, Grey, Lime, Orange, Pink, Red, SaddleBrown, White, Yellow}
+import java.io.{BufferedWriter, File, FileWriter}
 
 object DrawingMain extends JFXApp {
 
@@ -155,6 +156,27 @@ object DrawingMain extends JFXApp {
     currentCanvas = canvasMap(tab)
     currentDrawing = drawingMap(tab)
   }
+
+   saveItem.onAction = (ae: ActionEvent) => {
+    val field = new TextInputDialog("Untitled")
+    field.setHeaderText("Give the file name:")
+    field.show()
+
+    field.onCloseRequest = (de: DialogEvent) => {
+      val input: Option[String] = Option(field.result.value)
+      input match {
+        case Some(name) => {
+          val file = new File(s"$name.txt")
+          val writer = new BufferedWriter(new FileWriter(file))
+          val text = currentDrawing.toString
+          writer.write(text)
+          writer.close()
+        }
+        case None => field.close()
+      }
+    }
+  }
+
 
   clear.onAction = (ae: ActionEvent) => {
     currentDrawing.empty()

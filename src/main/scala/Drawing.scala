@@ -54,5 +54,11 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
     }
   }
 
-
+  override def toString = {
+    var text = ""
+    for (shape <- shapes) {
+      text += s"$shape\n"
+    }
+    text
+  }
 }
