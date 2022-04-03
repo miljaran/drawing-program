@@ -10,7 +10,8 @@ import scalafx.geometry.Insets
 import scalafx.scene.input.MouseEvent
 import scalafx.scene.paint.Color
 import scalafx.scene.paint.Color.{Black, Blue, Cyan, DarkBlue, DarkViolet, FireBrick, Green, GreenYellow, Grey, Lime, Orange, Pink, Red, SaddleBrown, White, Yellow}
-import java.io.{BufferedWriter, File, FileWriter}
+
+import java.io._
 
 object DrawingMain extends JFXApp {
 
@@ -36,6 +37,35 @@ object DrawingMain extends JFXApp {
     val b = Math.round(c.getBlue * 255).asInstanceOf[Int] << 8
     val a = Math.round(c.getOpacity * 255).asInstanceOf[Int]
     String.format("#%08X", r + g + b + a)
+  }
+
+  // Function to read from files and create a new drawing from the contents
+  def readMyFile(sourceFile: String): Unit = {
+    var str = ""
+    val myFileReader = try {
+      new FileReader(sourceFile)
+    } catch {
+      case e: FileNotFoundException =>
+       println("File not found")
+       return
+    }
+
+     val lineReader = new BufferedReader(myFileReader)
+     try {
+        var inputLine = lineReader.readLine()
+        while (inputLine != null) {
+          str += s"$inputLine\n"
+          inputLine = lineReader.readLine()
+        }
+    } catch {
+      case e: IOException =>
+      println("Reading finished with error")
+    }
+    val (newDrawing, newTab, newCanvas) = makeDrawingTab()
+    canvasMap += newTab -> newCanvas
+    drawingMap += newTab -> newDrawing
+    tabPane += newTab
+    newDrawing.load(str)
   }
 
   // Create file menu
@@ -157,6 +187,7 @@ object DrawingMain extends JFXApp {
     currentDrawing = drawingMap(tab)
   }
 
+  // Event to save drawings into a file
    saveItem.onAction = (ae: ActionEvent) => {
     val field = new TextInputDialog("Untitled")
     field.setHeaderText("Give the file name:")
@@ -177,6 +208,20 @@ object DrawingMain extends JFXApp {
     }
   }
 
+  // Event to load drawing from a file
+  openItem.onAction = (ae: ActionEvent) => {
+    val field = new TextInputDialog("")
+    field.setHeaderText("Give the file name you want to read from:")
+    field.show()
+
+    field.onCloseRequest = (de: DialogEvent) => {
+      val input: Option[String] = Option(field.result.value)
+      input match {
+        case Some(name) => readMyFile(name)
+        case None => field.close()
+      }
+    }
+  }
 
   clear.onAction = (ae: ActionEvent) => {
     currentDrawing.empty()

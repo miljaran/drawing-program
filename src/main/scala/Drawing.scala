@@ -31,6 +31,10 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
     draw()
   }
 
+  def load(str: String) = {
+    println(str)
+  }
+
   def startNewShape(x_start: Double, y_start: Double): Unit = {
     currentShape match {
       case "line" => shapes += new Line(x_start, y_start, x_start, y_start, width, height, currentColor)
