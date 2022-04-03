@@ -43,7 +43,7 @@ object DrawingMain extends JFXApp {
   def readMyFile(sourceFile: String): Unit = {
     var str = ""
     val myFileReader = try {
-      new FileReader(sourceFile)
+      new FileReader(s"$sourceFile.txt")
     } catch {
       case e: FileNotFoundException =>
        println("File not found")

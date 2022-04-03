@@ -1,6 +1,6 @@
 import scalafx.scene.canvas.GraphicsContext
 import scalafx.scene.paint.Color
-import scalafx.scene.paint.Color.Red
+import scalafx.scene.paint.Color.{Black, Blue, Cyan, DarkBlue, DarkViolet, FireBrick, Green, GreenYellow, Grey, Lime, Orange, Pink, Red, SaddleBrown, White, Yellow}
 
 import scala.collection.mutable.Buffer
 
@@ -9,6 +9,28 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
   var currentColor: Color = Red
   var currentShape = "line"
   val shapes = Buffer[Shape]()
+
+  def colorStr(str: String): Color = {
+    str match {
+      case "red" => Red
+      case "blu" => Blue
+      case "yel" => Yellow
+      case "ora" => Orange
+      case "grn" => Lime
+      case "pur" => DarkViolet
+      case "whi" => White
+      case "bla" => Black
+      case "gre" => Grey
+      case "bro" => SaddleBrown
+      case "dre" => FireBrick
+      case "lre" => Pink
+      case "dbl" => DarkBlue
+      case "lbl" => Cyan
+      case "dgr" => Green
+      case "lgr" => GreenYellow
+      case _ => Red
+    }
+  }
 
   def changeColor(c: Color) = {
     currentColor = c
@@ -37,15 +59,15 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
     }
   }
 
-  def load(str: String) = { // TODO: notice colors and catch errors and fix circle
+  def load(str: String) = { // TODO: catch errors and fix lines
     val arr = str.split("\n\n")
     for (a <- arr) {
-      val splitted = a.split(",")
+      val splitted = a.split(", ")
       splitted(0) match {
-        case "L" => shapes += new Line(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, currentColor)
-        case "R" => shapes += new Rectangle(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, currentColor)
-        case "E" => shapes += new Ellipse(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, currentColor)
-        case "C" => shapes += new Circle(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, currentColor)
+        case "L" => shapes += new Line(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, colorStr(splitted(1)))
+        case "R" => shapes += new Rectangle(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, colorStr(splitted(1)))
+        case "E" => shapes += new Ellipse(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, colorStr(splitted(1)))
+        case "C" => shapes += new Circle(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, colorStr(splitted(1)))
       }
     }
     draw()
