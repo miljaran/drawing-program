@@ -7,6 +7,7 @@ import scalafx.scene.control.{Menu, MenuBar, MenuItem, Tab, TabPane, ToggleButto
 import scalafx.scene.layout.{BorderPane, ColumnConstraints, GridPane, RowConstraints}
 import scalafx.Includes._
 import scalafx.geometry.Insets
+import scalafx.scene.input.MouseEvent
 import scalafx.scene.paint.Color
 import scalafx.scene.paint.Color.{Black, Blue, Cyan, DarkBlue, DarkViolet, FireBrick, Green, GreenYellow, Grey, Lime, Orange, Pink, Red, SaddleBrown, White, Yellow}
 
@@ -19,7 +20,7 @@ object DrawingMain extends JFXApp {
   private def makeDrawingTab(): (Drawing, Tab, Canvas) = {
     val canvas = new Canvas(600, 580)
     val gc = canvas.graphicsContext2D
-    val drawing = new Drawing(gc)
+    val drawing = new Drawing(gc, canvas.getWidth, canvas.getHeight)
 
     val tab = new Tab
     tab.text = "Untitled"
@@ -79,6 +80,7 @@ object DrawingMain extends JFXApp {
     colorButtons(i) = new ToggleButton
   }
   val colorArr = Array[Color](Red, Blue, Yellow, Orange, Lime, DarkViolet, White, Black, Grey, SaddleBrown, FireBrick, Pink, DarkBlue, Cyan, Green, GreenYellow)
+  val colorMap = colorButtons.zip(colorArr).toMap
 
   // Set color button colors, sizes and toggle group
   for (i <- 0 to 15) {
@@ -95,6 +97,8 @@ object DrawingMain extends JFXApp {
     m += 1
   }
 
+  colorButtons(0).setSelected(true)
+
   // Create buttons for shapes
   var shapes = new ToggleGroup
   val line = new ToggleButton("Line")
@@ -107,6 +111,8 @@ object DrawingMain extends JFXApp {
   rectangle.setToggleGroup(shapes)
   ellipse.setToggleGroup(shapes)
   circle.setToggleGroup(shapes)
+
+  line.setSelected(true)
 
   // Add shape buttons to the toolbox
   toolbox.add(line, 0, 4, 2, 1)
@@ -150,4 +156,37 @@ object DrawingMain extends JFXApp {
     currentDrawing = drawingMap(tab)
   }
 
+  // Event to change color
+  colors.selectedToggle.onChange {
+    val button = colors.selectedToggle().asInstanceOf[javafx.scene.control.ToggleButton]
+    val color = colorMap(button)
+    currentDrawing.changeColor(color)
+  }
+
+  // Event to change shape
+  shapes.selectedToggle.onChange {
+    if (line.isSelected) {
+      currentDrawing.changeShape("line")
+    } else if (rectangle.isSelected) {
+      currentDrawing.changeShape("rectangle")
+    } else if (ellipse.isSelected) {
+      currentDrawing.changeShape("ellipse")
+    } else if (circle.isSelected) {
+      currentDrawing.changeShape("circle")
+    }
+  }
+
+  // Events to draw when dragging the mouse
+  private var x_start = 0.0
+  private var y_start = 0.0
+
+  currentCanvas.onMousePressed = (event: MouseEvent) => {
+    x_start = event.x
+    y_start = event.y
+    currentDrawing.startNewShape(x_start, y_start)
+  }
+
+  currentCanvas.onMouseDragged = (event: MouseEvent) => {
+    currentDrawing.updateShape(x_start, y_start, event.x, event.y)
+  }
 }
