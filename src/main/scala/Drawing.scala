@@ -16,6 +16,7 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
 
   def changeShape(s: String) = {
     currentShape = s
+    println(currentShape)
   }
 
   def undo() = {
@@ -33,6 +34,7 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
   def startNewShape(x_start: Double, y_start: Double): Unit = {
     currentShape match {
       case "line" => shapes += new Line(x_start, y_start, x_start, y_start, width, height, currentColor)
+      case "rectangle" => shapes += new Rectangle(x_start, y_start, x_start, y_start, width, height, currentColor)
       case _ => println("todo")
     }
   }
@@ -41,6 +43,7 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
     if (shapes.nonEmpty) {
       currentShape match {
         case "line" => shapes(shapes.length - 1) = new Line(x_start, y_start, x_end, y_end, width, height, currentColor)
+        case "rectangle" => shapes(shapes.length - 1) = new Rectangle(x_start, y_start, x_end, y_end, width, height, currentColor)
         case _ => println("todo")
       }
     }
