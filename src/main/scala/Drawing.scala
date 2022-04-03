@@ -18,6 +18,18 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
     currentShape = s
   }
 
+  def undo() = {
+    if (shapes.nonEmpty) {
+      shapes.remove(shapes.length - 1)
+      draw()
+    }
+  }
+
+  def empty() = {
+    shapes.clear()
+    draw()
+  }
+
   def startNewShape(x_start: Double, y_start: Double): Unit = {
     currentShape match {
       case "line" => shapes += new Line(x_start, y_start, x_start, y_start, width, height, currentColor)

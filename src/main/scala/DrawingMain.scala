@@ -156,6 +156,14 @@ object DrawingMain extends JFXApp {
     currentDrawing = drawingMap(tab)
   }
 
+  clear.onAction = (ae: ActionEvent) => {
+    currentDrawing.empty()
+  }
+
+  undo.onAction = (ae: ActionEvent) => {
+    currentDrawing.undo()
+  }
+
   // Event to change color
   colors.selectedToggle.onChange {
     val button = colors.selectedToggle().asInstanceOf[javafx.scene.control.ToggleButton]
