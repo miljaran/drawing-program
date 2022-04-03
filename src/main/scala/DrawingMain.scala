@@ -19,13 +19,13 @@ object DrawingMain extends JFXApp {
   private var drawingMap: Map[Tab, Drawing] = Map()
 
   // Function to add new tabs and canvases
-  private def makeDrawingTab(): (Drawing, Tab, Canvas) = {
+  private def makeDrawingTab(name: String): (Drawing, Tab, Canvas) = {
     val canvas = new Canvas(600, 580)
     val gc = canvas.graphicsContext2D
     val drawing = new Drawing(gc, canvas.getWidth, canvas.getHeight)
 
     val tab = new Tab
-    tab.text = "Untitled"
+    tab.text = name
     tab.content = canvas
     (drawing, tab, canvas)
   }
@@ -61,7 +61,7 @@ object DrawingMain extends JFXApp {
       case e: IOException =>
       println("Reading finished with error")
     }
-    val (newDrawing, newTab, newCanvas) = makeDrawingTab()
+    val (newDrawing, newTab, newCanvas) = makeDrawingTab(sourceFile)
     canvasMap += newTab -> newCanvas
     drawingMap += newTab -> newDrawing
     tabPane += newTab
@@ -153,7 +153,7 @@ object DrawingMain extends JFXApp {
 
   // Create first canvas
   val tabPane = new TabPane
-  val (firstDrawing, firstTab, firstCanvas) = makeDrawingTab()
+  val (firstDrawing, firstTab, firstCanvas) = makeDrawingTab("Untitled")
   canvasMap += firstTab -> firstCanvas
   drawingMap += firstTab -> firstDrawing
   tabPane += firstTab
@@ -174,7 +174,7 @@ object DrawingMain extends JFXApp {
 
   // Event to add new tabs and canvases
   newItem.onAction = (ae: ActionEvent) => {
-    val (newDrawing, newTab, newCanvas) = makeDrawingTab()
+    val (newDrawing, newTab, newCanvas) = makeDrawingTab("Untitled")
     canvasMap += newTab -> newCanvas
     drawingMap += newTab -> newDrawing
     tabPane += newTab
@@ -231,7 +231,7 @@ object DrawingMain extends JFXApp {
     currentDrawing.undo()
   }
 
-  // Event to change color
+  // Event to change color TODO: catch error when choosing the same color again
   colors.selectedToggle.onChange {
     val button = colors.selectedToggle().asInstanceOf[javafx.scene.control.ToggleButton]
     val color = colorMap(button)
@@ -255,13 +255,17 @@ object DrawingMain extends JFXApp {
   private var x_start = 0.0
   private var y_start = 0.0
 
-  currentCanvas.onMousePressed = (event: MouseEvent) => {
-    x_start = event.x
-    y_start = event.y
-    currentDrawing.startNewShape(x_start, y_start)
+  tabPane.onMousePressed = (me: MouseEvent) => {
+    currentCanvas.onMousePressed = (event: MouseEvent) => {
+      x_start = event.x
+      y_start = event.y
+      currentDrawing.startNewShape(x_start, y_start)
+    }
   }
 
-  currentCanvas.onMouseDragged = (event: MouseEvent) => {
-    currentDrawing.updateShape(x_start, y_start, event.x, event.y)
+  tabPane.onMouseDragged = (me: MouseEvent) => {
+    currentCanvas.onMouseDragged = (event: MouseEvent) => {
+      currentDrawing.updateShape(x_start, y_start, event.x, event.y)
+    }
   }
 }

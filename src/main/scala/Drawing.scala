@@ -16,7 +16,6 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
 
   def changeShape(s: String) = {
     currentShape = s
-    println(currentShape)
   }
 
   def undo() = {
@@ -31,8 +30,25 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
     draw()
   }
 
-  def load(str: String) = {
-    println(str)
+  def draw() = {
+    gc.clearRect(0, 0, width, height)
+    for (shape <- shapes) {
+      shape.draw(gc)
+    }
+  }
+
+  def load(str: String) = { // TODO: notice colors and catch errors and fix circle
+    val arr = str.split("\n\n")
+    for (a <- arr) {
+      val splitted = a.split(",")
+      splitted(0) match {
+        case "L" => shapes += new Line(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, currentColor)
+        case "R" => shapes += new Rectangle(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, currentColor)
+        case "E" => shapes += new Ellipse(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, currentColor)
+        case "C" => shapes += new Circle(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, currentColor)
+      }
+    }
+    draw()
   }
 
   def startNewShape(x_start: Double, y_start: Double): Unit = {
@@ -52,17 +68,9 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
         case "rectangle" => shapes(shapes.length - 1) = new Rectangle(x_start, y_start, x_end, y_end, width, height, currentColor)
         case "ellipse" => shapes(shapes.length - 1) = new Ellipse(x_start, y_start, x_end, y_end, width, height, currentColor)
         case "circle" => shapes(shapes.length - 1) = new Circle(x_start, y_start, x_end, y_end, width, height, currentColor)
-        case _ => println("todo")
       }
     }
     draw()
-  }
-
-  def draw() = {
-    gc.clearRect(0, 0, width, height)
-    for (shape <- shapes) {
-      shape.draw(gc)
-    }
   }
 
   override def toString = {
