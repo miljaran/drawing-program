@@ -18,6 +18,8 @@ object DrawingMain extends JFXApp {
   private var canvasMap: Map[Tab, Canvas] = Map()
   private var drawingMap: Map[Tab, Drawing] = Map()
 
+  private var currentColor = Red
+
   // Function to add new tabs and canvases
   private def makeDrawingTab(name: String): (Drawing, Tab, Canvas) = {
     val canvas = new Canvas(600, 580)
@@ -66,6 +68,15 @@ object DrawingMain extends JFXApp {
     drawingMap += newTab -> newDrawing
     tabPane += newTab
     newDrawing.load(str)
+  }
+
+  def updateColor() = {
+    try {
+      val button = colors.selectedToggle().asInstanceOf[javafx.scene.control.ToggleButton]
+      currentColor = colorMap(button)
+    } catch {
+      case e: NoSuchElementException => println("no change")
+    }
   }
 
   // Create file menu
@@ -185,6 +196,8 @@ object DrawingMain extends JFXApp {
     val tab = tabPane.getSelectionModel.getSelectedItem
     currentCanvas = canvasMap(tab)
     currentDrawing = drawingMap(tab)
+    updateColor()
+    currentDrawing.changeColor(currentColor)
   }
 
   // Event to save drawings into a file
@@ -233,13 +246,8 @@ object DrawingMain extends JFXApp {
 
   // Event to change color
   colors.selectedToggle.onChange {
-    try {
-    val button = colors.selectedToggle().asInstanceOf[javafx.scene.control.ToggleButton]
-    val color = colorMap(button)
-    currentDrawing.changeColor(color)
-    } catch {
-      case e: NoSuchElementException => println("Color was not changed")
-    }
+    updateColor()
+    currentDrawing.changeColor(currentColor)
   }
 
   // Event to change shape
