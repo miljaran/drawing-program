@@ -231,11 +231,15 @@ object DrawingMain extends JFXApp {
     currentDrawing.undo()
   }
 
-  // Event to change color TODO: catch error when choosing the same color again
+  // Event to change color
   colors.selectedToggle.onChange {
+    try {
     val button = colors.selectedToggle().asInstanceOf[javafx.scene.control.ToggleButton]
     val color = colorMap(button)
     currentDrawing.changeColor(color)
+    } catch {
+      case e: NoSuchElementException => println("Color was not changed")
+    }
   }
 
   // Event to change shape

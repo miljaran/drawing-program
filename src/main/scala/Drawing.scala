@@ -59,7 +59,7 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
     }
   }
 
-  def load(str: String) = { // TODO: catch errors and fix lines
+  def load(str: String) = { // TODO: catch errors
     val arr = str.split("\n\n")
     for (a <- arr) {
       val splitted = a.split(", ")
@@ -79,7 +79,6 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
       case "rectangle" => shapes += new Rectangle(x_start, y_start, x_start, y_start, width, height, currentColor)
       case "ellipse" => shapes += new Ellipse(x_start, y_start, x_start, y_start, width, height, currentColor)
       case "circle" => shapes += new Circle(x_start, y_start, x_start, y_start, width, height, currentColor)
-      case _ => println("todo")
     }
   }
 
