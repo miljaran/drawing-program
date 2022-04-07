@@ -177,7 +177,7 @@ object DrawingMain extends JFXApp {
   }
 
   // Event to load drawing from a file
-  openItem.onAction = (ae: ActionEvent) => { // TODO: when the file is faulty dont open new tab
+  openItem.onAction = (ae: ActionEvent) => {
     val field = new TextInputDialog("")
     field.setHeaderText("Give the file name you want to read from:")
     field.show()
@@ -187,10 +187,11 @@ object DrawingMain extends JFXApp {
       input match {
         case Some(name) => {
           val (newDrawing, newTab, newCanvas) = makeDrawingTab(name)
-          canvasMap += newTab -> newCanvas
+          if (newDrawing.readFile(name)) {
+            canvasMap += newTab -> newCanvas
           drawingMap += newTab -> newDrawing
           tabPane += newTab
-          newDrawing.readFile(name)
+          }
         }
         case None => field.close()
       }

@@ -70,14 +70,14 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
           writer.close()
   }
 
-  def readFile(name: String): Unit = {
+  def readFile(name: String): Boolean = {
     var str = ""
     val myFileReader = try {
       new FileReader(s"$name.txt")
     } catch {
       case e: FileNotFoundException => {
         alert("Error", s"Could not find the file ${name}.txt", "Make sure you wrote the file name correctly")
-        return
+        return false
       }
     }
 
@@ -90,11 +90,11 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
         }
         load(str, name)
     } catch {
-      case e: IOException => println("Reading finished with error")
+      case e: IOException => println("Reading finished with error"); false
     }
   }
 
-  def load(str: String, name: String) = {
+  def load(str: String, name: String): Boolean = {
     try {
       val arr = str.split("\n\n")
       for (a <- arr) {
@@ -107,9 +107,10 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
         }
       }
       draw()
+      true
     } catch {
-      case e: MatchError => alert("Error", s"Could not read the file ${name}.txt", "The file format was not correct")
-      case e: IndexOutOfBoundsException => alert("Error", s"Could not read the file ${name}.txt", "The file format was not correct")
+      case e: MatchError => alert("Error", s"Could not read the file ${name}.txt", "The file format was not correct"); false
+      case e: IndexOutOfBoundsException => alert("Error", s"Could not read the file ${name}.txt", "The file format was not correct"); false
     }
   }
 
