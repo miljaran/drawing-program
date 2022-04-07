@@ -10,7 +10,6 @@ import scalafx.geometry.Insets
 import scalafx.scene.input.MouseEvent
 import scalafx.scene.paint.Color
 import scalafx.scene.paint.Color.{Black, Blue, Cyan, DarkBlue, DarkViolet, FireBrick, Green, GreenYellow, Grey, Lime, Orange, Pink, Red, SaddleBrown, White, Yellow}
-
 import drawing._
 
 object DrawingMain extends JFXApp {
@@ -40,15 +39,6 @@ object DrawingMain extends JFXApp {
     val b = Math.round(c.getBlue * 255).asInstanceOf[Int] << 8
     val a = Math.round(c.getOpacity * 255).asInstanceOf[Int]
     String.format("#%08X", r + g + b + a)
-  }
-
-  def updateColor() = {
-    try {
-      val button = colors.selectedToggle().asInstanceOf[javafx.scene.control.ToggleButton]
-      currentColor = colorMap(button)
-    } catch {
-      case e: NoSuchElementException => println("no change")
-    }
   }
 
   // Create file menu
@@ -88,7 +78,7 @@ object DrawingMain extends JFXApp {
   toolbox.rowConstraints = rowConstraints
 
   // Create buttons for colors
-  var colors = new ToggleGroup
+  val colors = new ToggleGroup
   val colorButtons = Array.ofDim[ToggleButton](16)
   for (i <- 0 to 15) {
     colorButtons(i) = new ToggleButton
@@ -114,25 +104,21 @@ object DrawingMain extends JFXApp {
   colorButtons(0).setSelected(true)
 
   // Create buttons for shapes
-  var shapes = new ToggleGroup // TODO: change to work the same way as color buttons
-  val line = new ToggleButton("Line")
-  val rectangle = new ToggleButton("Rectangle")
-  val ellipse = new ToggleButton("Ellipse")
-  val circle = new ToggleButton("Circle")
-
-  // Set shape buttons to the same toggle group
-  line.setToggleGroup(shapes)
-  rectangle.setToggleGroup(shapes)
-  ellipse.setToggleGroup(shapes)
-  circle.setToggleGroup(shapes)
-
-  line.setSelected(true)
+  val shapes = new ToggleGroup // TODO: change to work the same way as color buttons
+  val shapeButtons = Array.ofDim[ToggleButton](4)
+  val shapeArr = Array("line", "rectangle", "ellipse", "circle")
+  for (i <- 0 to 3) {
+     val button = new ToggleButton(shapeArr(i))
+     shapeButtons(i) = button
+    button.setToggleGroup(shapes)
+  }
+  val shapeMap = shapeButtons.zip(shapeArr).toMap
 
   // Add shape buttons to the toolbox
-  toolbox.add(line, 0, 4, 2, 1)
-  toolbox.add(rectangle, 2, 4, 2, 1)
-  toolbox.add(ellipse, 0, 5, 2, 1)
-  toolbox.add(circle, 2, 5, 2, 1)
+  toolbox.add(shapeButtons(0), 0, 4, 2, 1)
+  toolbox.add(shapeButtons(1), 2, 4, 2, 1)
+  toolbox.add(shapeButtons(2), 0, 5, 2, 1)
+  toolbox.add(shapeButtons(3), 2, 5, 2, 1)
 
   // Create first canvas
   val tabPane = new TabPane
@@ -168,7 +154,6 @@ object DrawingMain extends JFXApp {
     val tab = tabPane.getSelectionModel.getSelectedItem
     currentCanvas = canvasMap(tab)
     currentDrawing = drawingMap(tab)
-    updateColor()
   }
 
   // Event to save drawings into a file
@@ -217,21 +202,23 @@ object DrawingMain extends JFXApp {
 
   // Event to change color
   colors.selectedToggle.onChange {
-    updateColor()
+    try {
+      val button = colors.selectedToggle().asInstanceOf[javafx.scene.control.ToggleButton]
+      currentColor = colorMap(button)
+    } catch {
+      case e: NoSuchElementException => println("no change")
+    }
   }
 
   // Event to change shape
-  /*shapes.selectedToggle.onChange {
-    if (line.isSelected) {
-      currentDrawing.changeShape("line")
-    } else if (rectangle.isSelected) {
-      currentDrawing.changeShape("rectangle")
-    } else if (ellipse.isSelected) {
-      currentDrawing.changeShape("ellipse")
-    } else if (circle.isSelected) {
-      currentDrawing.changeShape("circle")
+  shapes.selectedToggle.onChange {
+    try {
+      val button = shapes.selectedToggle().asInstanceOf[javafx.scene.control.ToggleButton]
+      currentShape = shapeMap(button)
+    } catch {
+      case e: NoSuchElementException => println("no change")
     }
-  }*/
+  }
 
   // Events to draw when dragging the mouse
   private var x_start = 0.0
