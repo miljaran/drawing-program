@@ -1,17 +1,16 @@
 package drawing
 
 import scalafx.scene.canvas.GraphicsContext
-import scalafx.scene.control.Alert
+import scalafx.scene.control.{Alert, DialogEvent, TextInputDialog}
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.paint.Color
 import scalafx.scene.paint.Color.{Black, Blue, Cyan, DarkBlue, DarkViolet, FireBrick, Green, GreenYellow, Grey, Lime, Orange, Pink, Red, SaddleBrown, White, Yellow}
 
+import java.io._
 import scala.collection.mutable.Buffer
 
 class Drawing(gc: GraphicsContext, width: Double, height: Double) {
 
-  var currentColor: Color = Red
-  var currentShape = "line"
   val shapes = Buffer[Shape]()
 
   def colorStr(str: String): Color = {
@@ -36,14 +35,6 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
     }
   }
 
-  def changeColor(c: Color) = {
-    currentColor = c
-  }
-
-  def changeShape(s: String) = {
-    currentShape = s
-  }
-
   def undo() = {
     if (shapes.nonEmpty) {
       shapes.remove(shapes.length - 1)
@@ -63,6 +54,46 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
     }
   }
 
+  def alert(name: String, header: String, content: String) = {
+    new Alert(AlertType.Error) {
+      title = name
+      headerText = header
+      contentText = content
+    }.showAndWait()
+  }
+
+  def saveFile(name: String) = {
+    val file = new File(s"$name.txt")
+          val writer = new BufferedWriter(new FileWriter(file))
+          val text = this.toString
+          writer.write(text)
+          writer.close()
+  }
+
+  def readFile(name: String): Unit = {
+    var str = ""
+    val myFileReader = try {
+      new FileReader(s"$name.txt")
+    } catch {
+      case e: FileNotFoundException => {
+        alert("Error", s"Could not find the file ${name}.txt", "Make sure you wrote the file name correctly")
+        return
+      }
+    }
+
+     val lineReader = new BufferedReader(myFileReader)
+     try {
+        var inputLine = lineReader.readLine()
+        while (inputLine != null) {
+          str += s"$inputLine\n"
+          inputLine = lineReader.readLine()
+        }
+        load(str, name)
+    } catch {
+      case e: IOException => println("Reading finished with error")
+    }
+  }
+
   def load(str: String, name: String) = {
     try {
       val arr = str.split("\n\n")
@@ -77,32 +108,26 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
       }
       draw()
     } catch {
-      case e: MatchError => {
-        val alert = new Alert(AlertType.Error)
-        alert.setTitle("Error")
-        alert.setHeaderText(s"Could not read the file ${name}.txt")
-        alert.setContentText("The file format was not correct")
-        alert.showAndWait()
-       }
+      case e: MatchError => alert("Error", s"Could not read the file ${name}.txt", "The file format was not correct")
     }
   }
 
-  def startNewShape(x_start: Double, y_start: Double): Unit = {
-    currentShape match {
-      case "line" => shapes += new Line(x_start, y_start, x_start, y_start, width, height, currentColor)
-      case "rectangle" => shapes += new Rectangle(x_start, y_start, x_start, y_start, width, height, currentColor)
-      case "ellipse" => shapes += new Ellipse(x_start, y_start, x_start, y_start, width, height, currentColor)
-      case "circle" => shapes += new Circle(x_start, y_start, x_start, y_start, width, height, currentColor)
+  def startNewShape(x_start: Double, y_start: Double, color: Color, shape: String): Unit = {
+    shape match {
+      case "line" => shapes += new Line(x_start, y_start, x_start, y_start, width, height, color)
+      case "rectangle" => shapes += new Rectangle(x_start, y_start, x_start, y_start, width, height, color)
+      case "ellipse" => shapes += new Ellipse(x_start, y_start, x_start, y_start, width, height, color)
+      case "circle" => shapes += new Circle(x_start, y_start, x_start, y_start, width, height, color)
     }
   }
 
-  def updateShape(x_start: Double, y_start: Double, x_end: Double, y_end: Double): Unit = {
+  def updateShape(x_start: Double, y_start: Double, x_end: Double, y_end: Double, color: Color, shape: String): Unit = {
     if (shapes.nonEmpty) {
-      currentShape match {
-        case "line" => shapes(shapes.length - 1) = new Line(x_start, y_start, x_end, y_end, width, height, currentColor)
-        case "rectangle" => shapes(shapes.length - 1) = new Rectangle(x_start, y_start, x_end, y_end, width, height, currentColor)
-        case "ellipse" => shapes(shapes.length - 1) = new Ellipse(x_start, y_start, x_end, y_end, width, height, currentColor)
-        case "circle" => shapes(shapes.length - 1) = new Circle(x_start, y_start, x_end, y_end, width, height, currentColor)
+      shape match {
+        case "line" => shapes(shapes.length - 1) = new Line(x_start, y_start, x_end, y_end, width, height, color)
+        case "rectangle" => shapes(shapes.length - 1) = new Rectangle(x_start, y_start, x_end, y_end, width, height, color)
+        case "ellipse" => shapes(shapes.length - 1) = new Ellipse(x_start, y_start, x_end, y_end, width, height, color)
+        case "circle" => shapes(shapes.length - 1) = new Circle(x_start, y_start, x_end, y_end, width, height, color)
       }
     }
     draw()

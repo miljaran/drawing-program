@@ -3,16 +3,14 @@ import scalafx.application.JFXApp.PrimaryStage
 import scalafx.event.ActionEvent
 import scalafx.scene.Scene
 import scalafx.scene.canvas.Canvas
-import scalafx.scene.control.{Alert, DialogEvent, Menu, MenuBar, MenuItem, Tab, TabPane, TextInputDialog, ToggleButton, ToggleGroup}
+import scalafx.scene.control.{DialogEvent, Menu, MenuBar, MenuItem, Tab, TabPane, TextInputDialog, ToggleButton, ToggleGroup}
 import scalafx.scene.layout.{BorderPane, ColumnConstraints, GridPane, RowConstraints}
 import scalafx.Includes._
 import scalafx.geometry.Insets
-import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.input.MouseEvent
 import scalafx.scene.paint.Color
 import scalafx.scene.paint.Color.{Black, Blue, Cyan, DarkBlue, DarkViolet, FireBrick, Green, GreenYellow, Grey, Lime, Orange, Pink, Red, SaddleBrown, White, Yellow}
 
-import java.io._
 import drawing._
 
 object DrawingMain extends JFXApp {
@@ -21,6 +19,7 @@ object DrawingMain extends JFXApp {
   private var drawingMap: Map[Tab, Drawing] = Map()
 
   private var currentColor = Red
+  private var currentShape = "line"
 
   // Function to add new tabs and canvases
   private def makeDrawingTab(name: String): (Drawing, Tab, Canvas) = {
@@ -41,39 +40,6 @@ object DrawingMain extends JFXApp {
     val b = Math.round(c.getBlue * 255).asInstanceOf[Int] << 8
     val a = Math.round(c.getOpacity * 255).asInstanceOf[Int]
     String.format("#%08X", r + g + b + a)
-  }
-
-  // Function to read from files and create a new drawing from the contents
-  def readMyFile(name: String): Unit = { // TODO: when the file is faulty dont open new tab
-    var str = ""
-    val myFileReader = try {
-      new FileReader(s"$name.txt")
-    } catch {
-      case e: FileNotFoundException => {
-        val alert = new Alert(AlertType.Error)
-        alert.setTitle("Error")
-        alert.setHeaderText(s"Could not find the file ${name}.txt")
-        alert.setContentText("Make sure you wrote the file name correctly")
-        alert.showAndWait()
-        return
-      }
-    }
-
-     val lineReader = new BufferedReader(myFileReader)
-     try {
-        var inputLine = lineReader.readLine()
-        while (inputLine != null) {
-          str += s"$inputLine\n"
-          inputLine = lineReader.readLine()
-        }
-       val (newDrawing, newTab, newCanvas) = makeDrawingTab(name)
-        canvasMap += newTab -> newCanvas
-        drawingMap += newTab -> newDrawing
-        tabPane += newTab
-        newDrawing.load(str, name)
-    } catch {
-      case e: IOException => println("Reading finished with error")
-    }
   }
 
   def updateColor() = {
@@ -203,11 +169,10 @@ object DrawingMain extends JFXApp {
     currentCanvas = canvasMap(tab)
     currentDrawing = drawingMap(tab)
     updateColor()
-    currentDrawing.changeColor(currentColor)
   }
 
   // Event to save drawings into a file
-   saveItem.onAction = (ae: ActionEvent) => {
+  saveItem.onAction = (ae: ActionEvent) => {
     val field = new TextInputDialog("Untitled")
     field.setHeaderText("Give the file name:")
     field.show()
@@ -215,20 +180,14 @@ object DrawingMain extends JFXApp {
     field.onCloseRequest = (de: DialogEvent) => {
       val input: Option[String] = Option(field.result.value)
       input match {
-        case Some(name) => {
-          val file = new File(s"$name.txt")
-          val writer = new BufferedWriter(new FileWriter(file))
-          val text = currentDrawing.toString
-          writer.write(text)
-          writer.close()
-        }
+        case Some(name) => currentDrawing.saveFile(name)
         case None => field.close()
       }
     }
   }
 
   // Event to load drawing from a file
-  openItem.onAction = (ae: ActionEvent) => {
+  openItem.onAction = (ae: ActionEvent) => { // TODO: when the file is faulty dont open new tab
     val field = new TextInputDialog("")
     field.setHeaderText("Give the file name you want to read from:")
     field.show()
@@ -236,7 +195,13 @@ object DrawingMain extends JFXApp {
     field.onCloseRequest = (de: DialogEvent) => {
       val input: Option[String] = Option(field.result.value)
       input match {
-        case Some(name) => readMyFile(name)
+        case Some(name) => {
+          val (newDrawing, newTab, newCanvas) = makeDrawingTab(name)
+          canvasMap += newTab -> newCanvas
+          drawingMap += newTab -> newDrawing
+          tabPane += newTab
+          newDrawing.readFile(name)
+        }
         case None => field.close()
       }
     }
@@ -253,11 +218,10 @@ object DrawingMain extends JFXApp {
   // Event to change color
   colors.selectedToggle.onChange {
     updateColor()
-    currentDrawing.changeColor(currentColor)
   }
 
   // Event to change shape
-  shapes.selectedToggle.onChange {
+  /*shapes.selectedToggle.onChange {
     if (line.isSelected) {
       currentDrawing.changeShape("line")
     } else if (rectangle.isSelected) {
@@ -267,7 +231,7 @@ object DrawingMain extends JFXApp {
     } else if (circle.isSelected) {
       currentDrawing.changeShape("circle")
     }
-  }
+  }*/
 
   // Events to draw when dragging the mouse
   private var x_start = 0.0
@@ -277,13 +241,13 @@ object DrawingMain extends JFXApp {
     currentCanvas.onMousePressed = (event: MouseEvent) => {
       x_start = event.x
       y_start = event.y
-      currentDrawing.startNewShape(x_start, y_start)
+      currentDrawing.startNewShape(x_start, y_start, currentColor, currentShape)
     }
   }
 
   tabPane.onMouseDragged = (me: MouseEvent) => {
     currentCanvas.onMouseDragged = (event: MouseEvent) => {
-      currentDrawing.updateShape(x_start, y_start, event.x, event.y)
+      currentDrawing.updateShape(x_start, y_start, event.x, event.y, currentColor, currentShape)
     }
   }
 }
