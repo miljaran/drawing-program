@@ -3,7 +3,7 @@ import scalafx.application.JFXApp.PrimaryStage
 import scalafx.event.ActionEvent
 import scalafx.scene.Scene
 import scalafx.scene.canvas.Canvas
-import scalafx.scene.control.{DialogEvent, Menu, MenuBar, MenuItem, Tab, TabPane, TextInputDialog, ToggleButton, ToggleGroup}
+import scalafx.scene.control.{DialogEvent, Menu, MenuBar, MenuItem, RadioButton, Tab, TabPane, TextInputDialog, ToggleButton, ToggleGroup}
 import scalafx.scene.layout.{BorderPane, ColumnConstraints, GridPane, RowConstraints}
 import scalafx.Includes._
 import scalafx.geometry.Insets
@@ -18,7 +18,7 @@ object DrawingMain extends JFXApp {
   private var drawingMap: Map[Tab, Drawing] = Map()
 
   private var currentColor = Red
-  private var currentShape = "line"
+  private var currentShape = "Line"
 
   // Function to add new tabs and canvases
   private def makeDrawingTab(name: String): (Drawing, Tab, Canvas) = {
@@ -79,20 +79,20 @@ object DrawingMain extends JFXApp {
 
   // Create buttons for colors
   val colors = new ToggleGroup
-  val colorButtons = Array.ofDim[ToggleButton](16)
-  for (i <- 0 to 15) {
-    colorButtons(i) = new ToggleButton
-  }
+  val colorButtons = Array.ofDim[RadioButton](16)
   val colorArr = Array[Color](Red, Blue, Yellow, Orange, Lime, DarkViolet, White, Black, Grey, SaddleBrown, FireBrick, Pink, DarkBlue, Cyan, Green, GreenYellow)
-  val colorMap = colorButtons.zip(colorArr).toMap
 
-  // Set color button colors, sizes and toggle group
   for (i <- 0 to 15) {
+    val button = new RadioButton
     val hex = toHexString(colorArr(i))
-    colorButtons(i).setStyle(s"-fx-background-color: $hex")
-    colorButtons(i).setPrefSize(40, 40)
-    colorButtons(i).setToggleGroup(colors)
+    button.getStyleClass.remove("radio-button")
+    button.setStyle(s"-fx-background-color: $hex;")
+    button.setPrefSize(40, 40)
+    button.setToggleGroup(colors)
+    colorButtons(i) = button
   }
+
+  val colorMap = colorButtons.zip(colorArr).toMap
 
   // Add color buttons to the toolbox
   var m = 0
@@ -104,14 +104,17 @@ object DrawingMain extends JFXApp {
   colorButtons(0).setSelected(true)
 
   // Create buttons for shapes
-  val shapes = new ToggleGroup // TODO: change to work the same way as color buttons
-  val shapeButtons = Array.ofDim[ToggleButton](4)
-  val shapeArr = Array("line", "rectangle", "ellipse", "circle")
+  val shapes = new ToggleGroup
+  val shapeButtons = Array.ofDim[RadioButton](4)
+  val shapeArr = Array("Line", "Rectangle", "Ellipse", "Circle")
   for (i <- 0 to 3) {
-     val button = new ToggleButton(shapeArr(i))
-     shapeButtons(i) = button
+    val button = new RadioButton(shapeArr(i))
+    button.getStyleClass.remove("radio-button")
+    button.getStyleClass.add("toggle-button")
     button.setToggleGroup(shapes)
+    shapeButtons(i) = button
   }
+
   val shapeMap = shapeButtons.zip(shapeArr).toMap
 
   // Add shape buttons to the toolbox
@@ -119,6 +122,8 @@ object DrawingMain extends JFXApp {
   toolbox.add(shapeButtons(1), 2, 4, 2, 1)
   toolbox.add(shapeButtons(2), 0, 5, 2, 1)
   toolbox.add(shapeButtons(3), 2, 5, 2, 1)
+
+  shapeButtons(0).setSelected(true)
 
   // Create first canvas
   val tabPane = new TabPane
@@ -202,22 +207,14 @@ object DrawingMain extends JFXApp {
 
   // Event to change color
   colors.selectedToggle.onChange {
-    try {
-      val button = colors.selectedToggle().asInstanceOf[javafx.scene.control.ToggleButton]
-      currentColor = colorMap(button)
-    } catch {
-      case e: NoSuchElementException => println("no change")
-    }
+    val button = colors.selectedToggle().asInstanceOf[javafx.scene.control.RadioButton]
+    currentColor = colorMap(button)
   }
 
   // Event to change shape
   shapes.selectedToggle.onChange {
-    try {
-      val button = shapes.selectedToggle().asInstanceOf[javafx.scene.control.ToggleButton]
-      currentShape = shapeMap(button)
-    } catch {
-      case e: NoSuchElementException => println("no change")
-    }
+    val button = shapes.selectedToggle().asInstanceOf[javafx.scene.control.RadioButton]
+    currentShape = shapeMap(button)
   }
 
   // Events to draw when dragging the mouse

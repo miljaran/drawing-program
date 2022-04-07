@@ -109,25 +109,26 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
       draw()
     } catch {
       case e: MatchError => alert("Error", s"Could not read the file ${name}.txt", "The file format was not correct")
+      case e: IndexOutOfBoundsException => alert("Error", s"Could not read the file ${name}.txt", "The file format was not correct")
     }
   }
 
   def startNewShape(x_start: Double, y_start: Double, color: Color, shape: String): Unit = {
     shape match {
-      case "line" => shapes += new Line(x_start, y_start, x_start, y_start, width, height, color)
-      case "rectangle" => shapes += new Rectangle(x_start, y_start, x_start, y_start, width, height, color)
-      case "ellipse" => shapes += new Ellipse(x_start, y_start, x_start, y_start, width, height, color)
-      case "circle" => shapes += new Circle(x_start, y_start, x_start, y_start, width, height, color)
+      case "Line" => shapes += new Line(x_start, y_start, x_start, y_start, width, height, color)
+      case "Rectangle" => shapes += new Rectangle(x_start, y_start, x_start, y_start, width, height, color)
+      case "Ellipse" => shapes += new Ellipse(x_start, y_start, x_start, y_start, width, height, color)
+      case "Circle" => shapes += new Circle(x_start, y_start, x_start, y_start, width, height, color)
     }
   }
 
   def updateShape(x_start: Double, y_start: Double, x_end: Double, y_end: Double, color: Color, shape: String): Unit = {
     if (shapes.nonEmpty) {
       shape match {
-        case "line" => shapes(shapes.length - 1) = new Line(x_start, y_start, x_end, y_end, width, height, color)
-        case "rectangle" => shapes(shapes.length - 1) = new Rectangle(x_start, y_start, x_end, y_end, width, height, color)
-        case "ellipse" => shapes(shapes.length - 1) = new Ellipse(x_start, y_start, x_end, y_end, width, height, color)
-        case "circle" => shapes(shapes.length - 1) = new Circle(x_start, y_start, x_end, y_end, width, height, color)
+        case "Line" => shapes(shapes.length - 1) = new Line(x_start, y_start, x_end, y_end, width, height, color)
+        case "Rectangle" => shapes(shapes.length - 1) = new Rectangle(x_start, y_start, x_end, y_end, width, height, color)
+        case "Ellipse" => shapes(shapes.length - 1) = new Ellipse(x_start, y_start, x_end, y_end, width, height, color)
+        case "Circle" => shapes(shapes.length - 1) = new Circle(x_start, y_start, x_end, y_end, width, height, color)
       }
     }
     draw()
