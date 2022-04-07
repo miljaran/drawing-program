@@ -59,18 +59,22 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
     }
   }
 
-  def load(str: String) = { // TODO: catch errors
-    val arr = str.split("\n\n")
-    for (a <- arr) {
-      val splitted = a.split(", ")
-      splitted(0) match {
-        case "L" => shapes += new Line(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, colorStr(splitted(1)))
-        case "R" => shapes += new Rectangle(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, colorStr(splitted(1)))
-        case "E" => shapes += new Ellipse(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, colorStr(splitted(1)))
-        case "C" => shapes += new Circle(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, colorStr(splitted(1)))
+  def load(str: String) = {
+    try {
+      val arr = str.split("\n\n")
+      for (a <- arr) {
+        val splitted = a.split(", ")
+        splitted(0) match {
+          case "L" => shapes += new Line(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, colorStr(splitted(1)))
+          case "R" => shapes += new Rectangle(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, colorStr(splitted(1)))
+          case "E" => shapes += new Ellipse(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, colorStr(splitted(1)))
+          case "C" => shapes += new Circle(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, colorStr(splitted(1)))
+        }
       }
+      draw()
+    } catch {
+      case e: MatchError => println("faulty file")
     }
-    draw()
   }
 
   def startNewShape(x_start: Double, y_start: Double): Unit = {

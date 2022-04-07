@@ -42,7 +42,7 @@ object DrawingMain extends JFXApp {
   }
 
   // Function to read from files and create a new drawing from the contents
-  def readMyFile(sourceFile: String): Unit = {
+  def readMyFile(sourceFile: String): Unit = { // TODO: when the file is faulty dont open new tab, instead show error message
     var str = ""
     val myFileReader = try {
       new FileReader(s"$sourceFile.txt")
@@ -59,15 +59,15 @@ object DrawingMain extends JFXApp {
           str += s"$inputLine\n"
           inputLine = lineReader.readLine()
         }
+       val (newDrawing, newTab, newCanvas) = makeDrawingTab(sourceFile)
+        canvasMap += newTab -> newCanvas
+        drawingMap += newTab -> newDrawing
+        tabPane += newTab
+        newDrawing.load(str)
     } catch {
       case e: IOException =>
       println("Reading finished with error")
     }
-    val (newDrawing, newTab, newCanvas) = makeDrawingTab(sourceFile)
-    canvasMap += newTab -> newCanvas
-    drawingMap += newTab -> newDrawing
-    tabPane += newTab
-    newDrawing.load(str)
   }
 
   def updateColor() = {
