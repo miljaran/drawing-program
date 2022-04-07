@@ -1,4 +1,6 @@
 import scalafx.scene.canvas.GraphicsContext
+import scalafx.scene.control.Alert
+import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.paint.Color
 import scalafx.scene.paint.Color.{Black, Blue, Cyan, DarkBlue, DarkViolet, FireBrick, Green, GreenYellow, Grey, Lime, Orange, Pink, Red, SaddleBrown, White, Yellow}
 
@@ -59,7 +61,7 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
     }
   }
 
-  def load(str: String) = {
+  def load(str: String, name: String) = {
     try {
       val arr = str.split("\n\n")
       for (a <- arr) {
@@ -73,7 +75,13 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
       }
       draw()
     } catch {
-      case e: MatchError => println("faulty file")
+      case e: MatchError => {
+        val alert = new Alert(AlertType.Error)
+        alert.setTitle("Error")
+        alert.setHeaderText(s"Could not read the file ${name}.txt")
+        alert.setContentText("The file format was not correct")
+        alert.showAndWait()
+       }
     }
   }
 

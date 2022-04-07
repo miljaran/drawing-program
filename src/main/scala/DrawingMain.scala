@@ -3,10 +3,11 @@ import scalafx.application.JFXApp.PrimaryStage
 import scalafx.event.ActionEvent
 import scalafx.scene.Scene
 import scalafx.scene.canvas.Canvas
-import scalafx.scene.control.{DialogEvent, Menu, MenuBar, MenuItem, Tab, TabPane, TextInputDialog, ToggleButton, ToggleGroup}
+import scalafx.scene.control.{Alert, DialogEvent, Menu, MenuBar, MenuItem, Tab, TabPane, TextInputDialog, ToggleButton, ToggleGroup}
 import scalafx.scene.layout.{BorderPane, ColumnConstraints, GridPane, RowConstraints}
 import scalafx.Includes._
 import scalafx.geometry.Insets
+import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.input.MouseEvent
 import scalafx.scene.paint.Color
 import scalafx.scene.paint.Color.{Black, Blue, Cyan, DarkBlue, DarkViolet, FireBrick, Green, GreenYellow, Grey, Lime, Orange, Pink, Red, SaddleBrown, White, Yellow}
@@ -42,14 +43,19 @@ object DrawingMain extends JFXApp {
   }
 
   // Function to read from files and create a new drawing from the contents
-  def readMyFile(sourceFile: String): Unit = { // TODO: when the file is faulty dont open new tab, instead show error message
+  def readMyFile(name: String): Unit = { // TODO: when the file is faulty dont open new tab
     var str = ""
     val myFileReader = try {
-      new FileReader(s"$sourceFile.txt")
+      new FileReader(s"$name.txt")
     } catch {
-      case e: FileNotFoundException =>
-       println("File not found")
-       return
+      case e: FileNotFoundException => {
+        val alert = new Alert(AlertType.Error)
+        alert.setTitle("Error")
+        alert.setHeaderText(s"Could not find the file ${name}.txt")
+        alert.setContentText("Make sure you wrote the file name correctly")
+        alert.showAndWait()
+        return
+      }
     }
 
      val lineReader = new BufferedReader(myFileReader)
@@ -59,14 +65,13 @@ object DrawingMain extends JFXApp {
           str += s"$inputLine\n"
           inputLine = lineReader.readLine()
         }
-       val (newDrawing, newTab, newCanvas) = makeDrawingTab(sourceFile)
+       val (newDrawing, newTab, newCanvas) = makeDrawingTab(name)
         canvasMap += newTab -> newCanvas
         drawingMap += newTab -> newDrawing
         tabPane += newTab
-        newDrawing.load(str)
+        newDrawing.load(str, name)
     } catch {
-      case e: IOException =>
-      println("Reading finished with error")
+      case e: IOException => println("Reading finished with error")
     }
   }
 
@@ -142,7 +147,7 @@ object DrawingMain extends JFXApp {
   colorButtons(0).setSelected(true)
 
   // Create buttons for shapes
-  var shapes = new ToggleGroup
+  var shapes = new ToggleGroup // TODO: change to work the same way as color buttons
   val line = new ToggleButton("Line")
   val rectangle = new ToggleButton("Rectangle")
   val ellipse = new ToggleButton("Ellipse")
