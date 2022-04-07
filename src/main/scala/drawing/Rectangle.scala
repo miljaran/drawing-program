@@ -1,5 +1,8 @@
+package drawing
+
 import scalafx.scene.canvas.GraphicsContext
 import scalafx.scene.paint.Color
+
 import scala.math._
 
 class Rectangle(x_s: Double, y_s: Double, x_e: Double, y_e: Double, w: Double, h: Double, color: Color) extends Shape {

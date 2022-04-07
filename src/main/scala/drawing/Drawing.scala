@@ -1,3 +1,5 @@
+package drawing
+
 import scalafx.scene.canvas.GraphicsContext
 import scalafx.scene.control.Alert
 import scalafx.scene.control.Alert.AlertType

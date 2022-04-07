@@ -13,6 +13,7 @@ import scalafx.scene.paint.Color
 import scalafx.scene.paint.Color.{Black, Blue, Cyan, DarkBlue, DarkViolet, FireBrick, Green, GreenYellow, Grey, Lime, Orange, Pink, Red, SaddleBrown, White, Yellow}
 
 import java.io._
+import drawing._
 
 object DrawingMain extends JFXApp {
 
