@@ -2,3 +2,5 @@
 I almost have the view I want but there are no functionalities yet.
 
 30.3. update: After last update, I've added the toolbox butttons and implemented the functionality to add new tabs
+
+11.4. update: Currently I have a fully functioning app (on moderate level) which requires some more testing
