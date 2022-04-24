@@ -1,7 +1,7 @@
 package drawing
 
 import scalafx.scene.canvas.GraphicsContext
-import scalafx.scene.control.{Alert, DialogEvent, TextInputDialog}
+import scalafx.scene.control.Alert
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.paint.Color
 import scalafx.scene.paint.Color.{Black, Blue, Cyan, DarkBlue, DarkViolet, FireBrick, Green, GreenYellow, Grey, Lime, Orange, Pink, Red, SaddleBrown, White, Yellow}
@@ -11,9 +11,9 @@ import scala.collection.mutable.Buffer
 
 class Drawing(gc: GraphicsContext, width: Double, height: Double) {
 
-  val shapes = Buffer[Shape]()
+  private val shapes = Buffer[Shape]()
 
-  def colorStr(str: String): Color = {
+  def strToColor(str: String): Color = {
     str match {
       case "red" => Red
       case "blu" => Blue
@@ -64,10 +64,10 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
 
   def saveFile(name: String) = {
     val file = new File(s"$name.txt")
-          val writer = new BufferedWriter(new FileWriter(file))
-          val text = this.toString
-          writer.write(text)
-          writer.close()
+    val writer = new BufferedWriter(new FileWriter(file))
+    val text = this.toString
+    writer.write(text)
+    writer.close()
   }
 
   def readFile(name: String): Boolean = {
@@ -96,14 +96,14 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
 
   def load(str: String, name: String): Boolean = {
     try {
-      val arr = str.split("\n\n")
+      val arr = str.split("\n")
       for (a <- arr) {
         val splitted = a.split(", ")
         splitted(0) match {
-          case "L" => shapes += new Line(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, colorStr(splitted(1)))
-          case "R" => shapes += new Rectangle(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, colorStr(splitted(1)))
-          case "E" => shapes += new Ellipse(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, colorStr(splitted(1)))
-          case "C" => shapes += new Circle(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, colorStr(splitted(1)))
+          case "L" => shapes += new Line(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, strToColor(splitted(1)))
+          case "R" => shapes += new Rectangle(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, strToColor(splitted(1)))
+          case "E" => shapes += new Ellipse(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, strToColor(splitted(1)))
+          case "C" => shapes += new Circle(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, strToColor(splitted(1)))
         }
       }
       draw()
@@ -111,6 +111,7 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
     } catch {
       case e: MatchError => alert("Error", s"Could not read the file ${name}.txt", "The file format was not correct"); false
       case e: IndexOutOfBoundsException => alert("Error", s"Could not read the file ${name}.txt", "The file format was not correct"); false
+      case e: java.lang.NumberFormatException => alert("Error", s"Could not read the file ${name}.txt", "The file format was not correct"); false
     }
   }
 

@@ -3,7 +3,7 @@ import scalafx.application.JFXApp.PrimaryStage
 import scalafx.event.ActionEvent
 import scalafx.scene.Scene
 import scalafx.scene.canvas.Canvas
-import scalafx.scene.control.{DialogEvent, Menu, MenuBar, MenuItem, RadioButton, Tab, TabPane, TextInputDialog, ToggleButton, ToggleGroup}
+import scalafx.scene.control.{DialogEvent, Menu, MenuBar, MenuItem, RadioButton, Tab, TabPane, TextInputDialog, ToggleGroup}
 import scalafx.scene.layout.{BorderPane, ColumnConstraints, GridPane, RowConstraints}
 import scalafx.Includes._
 import scalafx.geometry.Insets
@@ -170,7 +170,11 @@ object DrawingMain extends JFXApp {
     field.onCloseRequest = (de: DialogEvent) => {
       val input: Option[String] = Option(field.result.value)
       input match {
-        case Some(name) => currentDrawing.saveFile(name)
+        case Some(name) => {
+          currentDrawing.saveFile(name)
+          val tab = tabPane.getSelectionModel.getSelectedItem
+          tab.text = name
+        }
         case None => field.close()
       }
     }

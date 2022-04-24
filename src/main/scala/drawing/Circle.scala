@@ -23,6 +23,6 @@ class Circle(x_s: Double, y_s: Double, x_e: Double, y_e: Double, w: Double, h: D
 
   override def toString = {
     val colorStr = colorToString(color)
-    s"C, $colorStr, $x_s, $y_s, $x_e, $y_e\n"
+    s"C, $colorStr, $x_s, $y_s, $x_e, $y_e"
   }
 }

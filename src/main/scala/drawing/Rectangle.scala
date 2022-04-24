@@ -20,6 +20,6 @@ class Rectangle(x_s: Double, y_s: Double, x_e: Double, y_e: Double, w: Double, h
 
   override def toString = {
     val colorStr = colorToString(color)
-    s"R, $colorStr, $x_s, $y_s, $x_e, $y_e\n"
+    s"R, $colorStr, $x_s, $y_s, $x_e, $y_e"
   }
 }
