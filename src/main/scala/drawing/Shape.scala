@@ -8,7 +8,7 @@ trait Shape {
 
   def draw(gc: GraphicsContext): Unit
 
-  def colorToString(c: Color) = {
+  def colorToStr(c: Color) = {
     c match {
       case Red => "red"
       case Blue => "blu"

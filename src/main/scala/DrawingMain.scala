@@ -128,6 +128,7 @@ object DrawingMain extends JFXApp {
   // Create first canvas
   val tabPane = new TabPane
   val (firstDrawing, firstTab, firstCanvas) = makeDrawingTab("Untitled")
+  firstTab.setClosable(false)
   canvasMap += firstTab -> firstCanvas
   drawingMap += firstTab -> firstDrawing
   tabPane += firstTab
@@ -171,7 +172,8 @@ object DrawingMain extends JFXApp {
       val input: Option[String] = Option(field.result.value)
       input match {
         case Some(name) => {
-          currentDrawing.saveFile(name)
+          if (name == "") currentDrawing.saveFile("Untitled")
+          else currentDrawing.saveFile(name)
           val tab = tabPane.getSelectionModel.getSelectedItem
           tab.text = name
         }

@@ -5,7 +5,7 @@ import scalafx.scene.paint.Color
 
 import scala.math.abs
 
-class Ellipse(x_s: Double, y_s: Double, x_e: Double, y_e: Double, w: Double, h: Double, color: Color) extends Shape {
+class Ellipse(x_s: Double, y_s: Double, x_e: Double, y_e: Double, color: Color) extends Shape {
 
   def draw(gc: GraphicsContext) = {
     gc.setStroke(color)
@@ -19,7 +19,7 @@ class Ellipse(x_s: Double, y_s: Double, x_e: Double, y_e: Double, w: Double, h: 
   }
 
   override def toString = {
-    val colorStr = colorToString(color)
+    val colorStr = colorToStr(color)
     s"E, $colorStr, $x_s, $y_s, $x_e, $y_e"
   }
 }

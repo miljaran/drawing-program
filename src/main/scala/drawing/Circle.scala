@@ -5,7 +5,7 @@ import scalafx.scene.paint.Color
 
 import scala.math._
 
-class Circle(x_s: Double, y_s: Double, x_e: Double, y_e: Double, w: Double, h: Double, color: Color) extends Shape {
+class Circle(x_s: Double, y_s: Double, x_e: Double, y_e: Double, color: Color) extends Shape {
 
   def draw(gc: GraphicsContext) = {
     gc.setStroke(color)
@@ -22,7 +22,7 @@ class Circle(x_s: Double, y_s: Double, x_e: Double, y_e: Double, w: Double, h: D
   }
 
   override def toString = {
-    val colorStr = colorToString(color)
+    val colorStr = colorToStr(color)
     s"C, $colorStr, $x_s, $y_s, $x_e, $y_e"
   }
 }

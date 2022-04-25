@@ -100,10 +100,10 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
       for (a <- arr) {
         val splitted = a.split(", ")
         splitted(0) match {
-          case "L" => shapes += new Line(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, strToColor(splitted(1)))
-          case "R" => shapes += new Rectangle(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, strToColor(splitted(1)))
-          case "E" => shapes += new Ellipse(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, strToColor(splitted(1)))
-          case "C" => shapes += new Circle(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, width, height, strToColor(splitted(1)))
+          case "L" => shapes += new Line(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, strToColor(splitted(1)))
+          case "R" => shapes += new Rectangle(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, strToColor(splitted(1)))
+          case "E" => shapes += new Ellipse(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, strToColor(splitted(1)))
+          case "C" => shapes += new Circle(splitted(2).toDouble, splitted(3).toDouble, splitted(4).toDouble, splitted(5).toDouble, strToColor(splitted(1)))
         }
       }
       draw()
@@ -117,20 +117,20 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
 
   def startNewShape(x_start: Double, y_start: Double, color: Color, shape: String): Unit = {
     shape match {
-      case "Line" => shapes += new Line(x_start, y_start, x_start, y_start, width, height, color)
-      case "Rectangle" => shapes += new Rectangle(x_start, y_start, x_start, y_start, width, height, color)
-      case "Ellipse" => shapes += new Ellipse(x_start, y_start, x_start, y_start, width, height, color)
-      case "Circle" => shapes += new Circle(x_start, y_start, x_start, y_start, width, height, color)
+      case "Line" => shapes += new Line(x_start, y_start, x_start, y_start, color)
+      case "Rectangle" => shapes += new Rectangle(x_start, y_start, x_start, y_start, color)
+      case "Ellipse" => shapes += new Ellipse(x_start, y_start, x_start, y_start, color)
+      case "Circle" => shapes += new Circle(x_start, y_start, x_start, y_start, color)
     }
   }
 
   def updateShape(x_start: Double, y_start: Double, x_end: Double, y_end: Double, color: Color, shape: String): Unit = {
     if (shapes.nonEmpty) {
       shape match {
-        case "Line" => shapes(shapes.length - 1) = new Line(x_start, y_start, x_end, y_end, width, height, color)
-        case "Rectangle" => shapes(shapes.length - 1) = new Rectangle(x_start, y_start, x_end, y_end, width, height, color)
-        case "Ellipse" => shapes(shapes.length - 1) = new Ellipse(x_start, y_start, x_end, y_end, width, height, color)
-        case "Circle" => shapes(shapes.length - 1) = new Circle(x_start, y_start, x_end, y_end, width, height, color)
+        case "Line" => shapes(shapes.length - 1) = new Line(x_start, y_start, x_end, y_end, color)
+        case "Rectangle" => shapes(shapes.length - 1) = new Rectangle(x_start, y_start, x_end, y_end, color)
+        case "Ellipse" => shapes(shapes.length - 1) = new Ellipse(x_start, y_start, x_end, y_end, color)
+        case "Circle" => shapes(shapes.length - 1) = new Circle(x_start, y_start, x_end, y_end, color)
       }
     }
     draw()
