@@ -42,15 +42,15 @@ object DrawingMain extends JFXApp {
   }
 
   // Create file menu
-  val newItem = new MenuItem("New")
-  val openItem = new MenuItem("Open")
-  val saveItem = new MenuItem("Save")
+  val newItem = new MenuItem("New drawing")
+  val openItem = new MenuItem("Open from a file")
+  val saveItem = new MenuItem("Save into a file")
   val fileMenu = new Menu("File")
   fileMenu.items = List(newItem, openItem, saveItem)
 
   // Create edit menu
-  val undo = new MenuItem("Undo")
-  val clear = new MenuItem("Clear")
+  val undo = new MenuItem("Undo last shape")
+  val clear = new MenuItem("Clear drawing")
   val editMenu = new Menu("Edit")
   editMenu.items = List(undo, clear)
 
