@@ -20,7 +20,7 @@ object DrawingMain extends JFXApp {
   private var currentColor = Red
   private var currentShape = "Line"
 
-  // Function to add new tabs and canvases
+  // Function to add a new drawing
   private def makeDrawingTab(name: String): (Drawing, Tab, Canvas) = {
     val canvas = new Canvas(600, 580)
     val gc = canvas.graphicsContext2D
@@ -41,20 +41,18 @@ object DrawingMain extends JFXApp {
     String.format("#%08X", r + g + b + a)
   }
 
-  // Create file menu
+  // Create menus
   val newItem = new MenuItem("New drawing")
   val openItem = new MenuItem("Open from a file")
   val saveItem = new MenuItem("Save into a file")
   val fileMenu = new Menu("File")
   fileMenu.items = List(newItem, openItem, saveItem)
 
-  // Create edit menu
   val undo = new MenuItem("Undo last shape")
   val clear = new MenuItem("Clear drawing")
   val editMenu = new Menu("Edit")
   editMenu.items = List(undo, clear)
 
-  // Add menus to the menu bar
   val menuBar = new MenuBar
   menuBar.menus = List(fileMenu, editMenu)
 
@@ -77,7 +75,7 @@ object DrawingMain extends JFXApp {
   }
   toolbox.rowConstraints = rowConstraints
 
-  // Create buttons for colors
+  // Create buttons for colors and add the to the toolbox
   val colors = new ToggleGroup
   val colorButtons = Array.ofDim[RadioButton](16)
   val colorArr = Array[Color](Red, Blue, Yellow, Orange, Lime, DarkViolet, White, Black, Grey, SaddleBrown, FireBrick, Pink, DarkBlue, Cyan, Green, GreenYellow)
@@ -94,7 +92,6 @@ object DrawingMain extends JFXApp {
 
   val colorMap = colorButtons.zip(colorArr).toMap
 
-  // Add color buttons to the toolbox
   var m = 0
   for (i <- 0 to 3; j <- 0 to 3) {
     toolbox.add(colorButtons(m), i, j)
@@ -103,7 +100,7 @@ object DrawingMain extends JFXApp {
 
   colorButtons(0).setSelected(true)
 
-  // Create buttons for shapes
+  // Create buttons for shapes and add them to the toolbox
   val shapes = new ToggleGroup
   val shapeButtons = Array.ofDim[RadioButton](4)
   val shapeArr = Array("Line", "Rectangle", "Ellipse", "Circle")
@@ -117,7 +114,6 @@ object DrawingMain extends JFXApp {
 
   val shapeMap = shapeButtons.zip(shapeArr).toMap
 
-  // Add shape buttons to the toolbox
   toolbox.add(shapeButtons(0), 0, 4, 2, 1)
   toolbox.add(shapeButtons(1), 2, 4, 2, 1)
   toolbox.add(shapeButtons(2), 0, 5, 2, 1)
@@ -135,7 +131,7 @@ object DrawingMain extends JFXApp {
   var currentCanvas = firstCanvas
   var currentDrawing = firstDrawing
 
-  // Create the window
+  // Create the application window
   stage = new PrimaryStage {
     title = "Drawing program"
     scene = new Scene(800, 600) {

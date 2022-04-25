@@ -70,6 +70,7 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
     writer.close()
   }
 
+  // Method to read data from files
   def readFile(name: String): Boolean = {
     var str = ""
     val myFileReader = try {
@@ -94,6 +95,7 @@ class Drawing(gc: GraphicsContext, width: Double, height: Double) {
     }
   }
 
+  // Method to convert data read from a file to a drawing
   def load(str: String, name: String): Boolean = {
     try {
       val arr = str.split("\n")
