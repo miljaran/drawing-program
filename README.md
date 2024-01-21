@@ -1,7 +1,7 @@
 # Description
 This is a drawing program where the user can draw on canvas when the mouse is pressed down. The user is able to choose a color and a shape they want to draw. The available shapes are line, rectangle, circle and ellipse. In addition to drawing, the user can either undo the last changes or clear the entire painting. It’s also possible to save drawings into a file and load drawings from files.
 
-# Running the application
+# Running the program
 Running the program requires an installed IntelliJ or sbt. A new sbt project should be created and then the launch file DrawingMain can be run.
 
 # How to use
@@ -16,4 +16,12 @@ Drawings can be read from files from the file menus “Open from a file” butto
 Undoing the last edit and emptying the drawing are done from the “Undo last shape” and “Clear drawing” buttons in the edit menu. They undo or clear the changes in the currently shown drawing. 
 
 # Format of the files
-The program saves drawings into text-based files and it can read drawings from them. Every shape’s information is on its own line and the different parameters are separated with a comma. The line format is `{shapeCode}, {colorCode}, {x_coord_start}, {y_coord_start}, {x_coord_end}, {y_coord_end}`. The shapeCode describes which shape is in question and it’s L for lines, E for ellipses, R for rectangles and C for circles. The colorCode describes the color with the following codes: red, blu, yel, ora, grn, pur, whi, bla, gre, bro, dre, lre, dbl, lbl, dgr and lgr. The coordinates describe the shape’s start and end coordinates in Double. 
+The program saves drawings into text-based files and it can read drawings from them. Every shape’s information is on its own line and the different parameters are separated with a comma. The line format is `{shapeCode}, {colorCode}, {x_coord_start}, {y_coord_start}, {x_coord_end}, {y_coord_end}`. The shapeCode describes which shape is in question and it’s L for lines, E for ellipses, R for rectangles and C for circles. The colorCode describes the color with the following codes: red, blu, yel, ora, grn, pur, whi, bla, gre, bro, dre, lre, dbl, lbl, dgr and lgr. The coordinates describe the shape’s start and end coordinates in Double.
+
+# Screenshots of the program
+<img width="799" alt="screenshot1" src="https://github.com/miljaran/drawing-program/assets/83217566/d0e2ff92-2ae9-49c5-aeb0-1043bf067fe7">
+*Drawing different shapes in different colors*
+<img width="801" alt="screenshot2" src="https://github.com/miljaran/drawing-program/assets/83217566/955623d7-4b19-4373-9eb3-49f3ad83eac2">
+*Saving the drawing into a file*
+<img width="798" alt="screenshot3" src="https://github.com/miljaran/drawing-program/assets/83217566/367104e8-d913-4876-8f71-b306b8bc7485">
+*Error message due to nonexistent file*
