@@ -19,9 +19,9 @@ Undoing the last edit and emptying the drawing are done from the “Undo last sh
 The program saves drawings into text-based files and it can read drawings from them. Every shape’s information is on its own line and the different parameters are separated with a comma. The line format is `{shapeCode}, {colorCode}, {x_coord_start}, {y_coord_start}, {x_coord_end}, {y_coord_end}`. The shapeCode describes which shape is in question and it’s L for lines, E for ellipses, R for rectangles and C for circles. The colorCode describes the color with the following codes: red, blu, yel, ora, grn, pur, whi, bla, gre, bro, dre, lre, dbl, lbl, dgr and lgr. The coordinates describe the shape’s start and end coordinates in Double.
 
 # Screenshots of the program
-<img width="799" alt="screenshot1" src="https://github.com/miljaran/drawing-program/assets/83217566/d0e2ff92-2ae9-49c5-aeb0-1043bf067fe7">
-*Drawing different shapes in different colors*
-<img width="801" alt="screenshot2" src="https://github.com/miljaran/drawing-program/assets/83217566/955623d7-4b19-4373-9eb3-49f3ad83eac2">
-*Saving the drawing into a file*
-<img width="798" alt="screenshot3" src="https://github.com/miljaran/drawing-program/assets/83217566/367104e8-d913-4876-8f71-b306b8bc7485">
+<img width="799" alt="screenshot1" src="https://github.com/miljaran/drawing-program/assets/83217566/d0e2ff92-2ae9-49c5-aeb0-1043bf067fe7"><br>
+*Drawing different shapes in different colors*<br><br>
+<img width="801" alt="screenshot2" src="https://github.com/miljaran/drawing-program/assets/83217566/955623d7-4b19-4373-9eb3-49f3ad83eac2"><br>
+*Saving the drawing into a file*<br><br>
+<img width="798" alt="screenshot3" src="https://github.com/miljaran/drawing-program/assets/83217566/367104e8-d913-4876-8f71-b306b8bc7485"><br>
 *Error message due to nonexistent file*
